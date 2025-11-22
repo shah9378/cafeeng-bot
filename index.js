@@ -11,7 +11,7 @@ console.log("🔥 فایل index.js اجرا شد! مرحله تست 1");
 const BOT_TOKEN = "8434442638:AAE-77hXCMlqYrZVkrzfvJHtuvaNsMB1B20";  
 
 // آدرس سایت Render
-const WEB_APP_URL = "https://cafeeng-bot.onrender.com";
+const WEB_APP_URL = "https://cafeeng-bot-1.onrender.com/secret-path";
 
 // =======================
 //   ساخت ربات
