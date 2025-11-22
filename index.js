@@ -68,3 +68,27 @@ app.listen(PORT, () => {
   console.log("🌐 Webhook فعال شد:", `${WEBHOOK_URL}/webhook`);
   console.log("📱 MiniApp URL:", `${WEBHOOK_URL}/app`);
 });
+bot.start((ctx) => {
+  ctx.reply(
+    "سلام! یکی از گزینه‌های زیر را انتخاب کن:",
+    {
+      reply_markup: {
+        keyboard: [
+          [{ text: "🚀 باز کردن مینی‌اپ" }],
+          [{ text: "ℹ️ راهنما" }]
+        ],
+        resize_keyboard: true
+      }
+    }
+  );
+});
+bot.hears("🚀 باز کردن مینی‌اپ", (ctx) => {
+  ctx.reply("مینی‌اپ در حال باز شدن است...", {
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "Open Mini App", web_app: { url: "https://cafeeng-bot-1.onrender.com/app/" } }]
+      ]
+    }
+  });
+});
+

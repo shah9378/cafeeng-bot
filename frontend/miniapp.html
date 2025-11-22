@@ -1,117 +1,122 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cafeeng Mini App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CafeEng Mini App</title>
 
-    <!-- فونت ایران‌سانس (CDN) -->
-    <link href="https://cdn.fontcdn.ir/Font/Persian/Sans/IRANSans.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: "IRANSans", sans-serif;
+      background: #f2f4fa;
+      color: #222;
+    }
 
-    <style>
-        body {
-            margin: 0;
-            font-family: IRANSans, sans-serif;
-            background: linear-gradient(135deg, #f8f9fc, #eef1f9);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-        }
+    .container {
+      max-width: 480px;
+      margin: auto;
+      padding: 20px;
+    }
 
-        .container {
-            background: white;
-            width: 100%;
-            max-width: 450px;
-            border-radius: 22px;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-            padding: 22px;
-            animation: fadeUp .5s ease;
-        }
+    .card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+      text-align: center;
+    }
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+    .title {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
 
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            color: #2d3436;
-            margin-bottom: 10px;
-        }
+    .subtitle {
+      font-size: 15px;
+      color: #666;
+    }
 
-        .subtitle {
-            text-align: center;
-            font-size: 15px;
-            opacity: .7;
-            margin-bottom: 22px;
-        }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #4a63f3;
+      color: #fff;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn:hover {
+      background: #3249d8;
+    }
 
-        .card {
-            background: #f4f7ff;
-            padding: 16px;
-            border-radius: 14px;
-            margin-bottom: 18px;
-            border: 1px solid #dfe4ff;
-        }
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      color: #999;
+      font-size: 14px;
+    }
 
-        .btn {
-            width: 100%;
-            padding: 14px;
-            background: #4c6ef5;
-            color: white;
-            font-size: 17px;
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: .2s;
-        }
-        .btn:hover {
-            background: #3b5bdb;
-        }
-
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            color: #777;
-            font-size: 13px;
-        }
-    </style>
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #323232;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 8px;
+      opacity: 0;
+      transition: 0.4s;
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="container">
+  
+  <div class="card">
     <div class="title">🎉 Mini App CaféEng</div>
-    <div class="subtitle">نسخه آزمایشی مینی‌اپ - آماده اتصال به ربات تلگرام</div>
+    <div class="subtitle">نسخه پیشرفته مینی‌اَپ متصل به ربات تلگرام</div>
+  </div>
 
-    <div class="card">
-        <strong>وضعیت:</strong>
-        <p id="status">در حال اتصال به ربات...</p>
-    </div>
+  <div class="card">
+    <h3>وضعیت اتصال:</h3>
+    <p id="status">در حال بررسی اتصال...</p>
+  </div>
 
-    <button class="btn" onclick="sendAction()">ارسال تست به ربات 🚀</button>
+  <button class="btn" onclick="testBot()">🚀 ارسال تست به ربات</button>
 
-    <div class="footer">© 2025 Cafeeng</div>
+  <div class="footer">© Cafeeng 2025</div>
+
 </div>
 
+<div id="toast" class="toast">پیام ارسال شد</div>
+
 <script>
-    // اگر از Telegram WebApp API استفاده می‌کنی
-    const tg = window.Telegram.WebApp;
-    tg.expand();
+  function showToast(text) {
+    let t = document.getElementById("toast");
+    t.innerText = text;
+    t.style.opacity = "1";
+    setTimeout(() => {
+      t.style.opacity = "0";
+    }, 2500);
+  }
 
-    document.getElementById("status").innerText = "Mini App is Running 🎉";
+  function testBot() {
+    fetch("/send-test")
+      .then(res => res.text())
+      .then(() => showToast("پیام تست ارسال شد!"))
+      .catch(() => showToast("خطا در ارسال پیام ❌"));
+  }
 
-    function sendAction() {
-        // ارسال پیام به ربات (از طریق API شما)
-        fetch("/api/action-test", {
-            method: "POST"
-        })
-        .then(r => r.text())
-        .then(t => alert("پاسخ از سرور: " + t));
-    }
+  document.getElementById("status").innerText = "اتصال با موفقیت برقرار شد ✔️";
 </script>
 
 </body>
