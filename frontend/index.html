@@ -1,20 +1,41 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cafeeng Mini App</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>کافه مهندسی</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
-<body>
-  <div id="app">
-    <h1>🎓 آموزش مهندسی عمران - Cafeeng</h1>
-    <p>به مینی‌اپ آموزشی خوش آمدید!</p>
 
-    <button id="start-course">شروع آموزش</button>
+<body>
+  <div class="container">
+
+    <h1 class="title">کافه مهندسی ☕🔧</h1>
+    <p class="subtitle">Mini App رسمی مهندسی عمران</p>
+
+    <!-- بخش جدیدترین مقالات -->
+    <section class="card">
+      <h2>جدیدترین مقالات</h2>
+      <ul id="articles-list">
+        <!-- مقاله‌ها از طریق JS اضافه می‌شوند -->
+      </ul>
+      <button class="btn" onclick="addArticle()">➕ افزودن مقاله جدید</button>
+    </section>
+
+    <!-- ورود به وبسایت -->
+    <section class="card">
+      <h2>ورود به وب‌سایت</h2>
+      <button class="btn website-btn" onclick="openWebsite()">
+        🌐 ورود به CafeEng.com
+      </button>
+    </section>
+
+    <footer>
+      © کافه مهندسی 2025
+    </footer>
   </div>
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="app.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
