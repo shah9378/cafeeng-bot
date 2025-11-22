@@ -1,10 +1,118 @@
-<!DOCTYPE html>
-<html>
-  <head>
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cafeeng Mini App</title>
-    <meta charset="utf-8" />
-  </head>
-  <body>
-    <h1>Mini App is Running 🎉</h1>
-  </body>
+
+    <!-- فونت ایران‌سانس (CDN) -->
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Sans/IRANSans.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: IRANSans, sans-serif;
+            background: linear-gradient(135deg, #f8f9fc, #eef1f9);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 22px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            padding: 22px;
+            animation: fadeUp .5s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: #2d3436;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 15px;
+            opacity: .7;
+            margin-bottom: 22px;
+        }
+
+        .card {
+            background: #f4f7ff;
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 18px;
+            border: 1px solid #dfe4ff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #4c6ef5;
+            color: white;
+            font-size: 17px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: .2s;
+        }
+        .btn:hover {
+            background: #3b5bdb;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="title">🎉 Mini App CaféEng</div>
+    <div class="subtitle">نسخه آزمایشی مینی‌اپ - آماده اتصال به ربات تلگرام</div>
+
+    <div class="card">
+        <strong>وضعیت:</strong>
+        <p id="status">در حال اتصال به ربات...</p>
+    </div>
+
+    <button class="btn" onclick="sendAction()">ارسال تست به ربات 🚀</button>
+
+    <div class="footer">© 2025 Cafeeng</div>
+</div>
+
+<script>
+    // اگر از Telegram WebApp API استفاده می‌کنی
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    document.getElementById("status").innerText = "Mini App is Running 🎉";
+
+    function sendAction() {
+        // ارسال پیام به ربات (از طریق API شما)
+        fetch("/api/action-test", {
+            method: "POST"
+        })
+        .then(r => r.text())
+        .then(t => alert("پاسخ از سرور: " + t));
+    }
+</script>
+
+</body>
 </html>

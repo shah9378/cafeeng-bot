@@ -66,3 +66,6 @@ app.listen(PORT, () => {
   console.log(`🚀 سرور روی پورت ${PORT} اجرا شد`);
   console.log(`🌐 Webhook فعال شد: ${WEBHOOK_URL}`);
 });
+app.post("/api/action-test", (req, res) => {
+  res.send("پاسخ تست از سرور دریافت شد ✔️");
+});
