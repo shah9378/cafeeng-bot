@@ -8,10 +8,10 @@ console.log("🔥 فایل index.js اجرا شد! مرحله تست 1");
 // =======================
 
 // توکن ربات
-const BOT_TOKEN = "8434442638:AAE-77hXCMlqYrZVkrzfvJHtuvaNsMB1B20";  
+const BOT_TOKEN = "8434442638:AAE-77hXCMlqYrZVkrzfvJHtuvaNsMB1B20";
 
-// آدرس سایت Render
-const WEB_APP_URL = "https://cafeeng-bot-1.onrender.com/secret-path";
+// آدرس سایت Render (بدون secret-path)
+const WEB_APP_URL = "https://cafeeng-bot-1.onrender.com";
 
 // =======================
 //   ساخت ربات
@@ -30,10 +30,10 @@ bot.start((ctx) => {
 // =======================
 const app = express();
 
-// Telegraf webhook
+// مسیر صحیح webhook  
 app.use(bot.webhookCallback("/webhook"));
 
-// تنظیمWebhook برای تلگرام
+// 🎯 Webhook صحیح
 bot.telegram.setWebhook(`${WEB_APP_URL}/webhook`);
 
 app.get("/", (req, res) => {
