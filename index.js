@@ -1,94 +1,53 @@
 const express = require("express");
-const path = require("path");
 const { Telegraf } = require("telegraf");
 
-// ===============
-//   تنظیمات مهم
-// ===============
-const BOT_TOKEN = "8434442638:AAE-77hXCMlqYrZVkrzfvJHtuvaNsMB1B20";
+// =======================
+//   تنظیمات اصلی
+// =======================
 
-// آدرس Render (بدون / آخر)
-const WEBHOOK_URL = "https://cafeeng-bot-1.onrender.com";
+// توکن ربات
+const BOT_TOKEN = "8434442638:AAE-77hXCMlqYrZVkrzfvJHtuvaNsMB1B20";  // ← توکن واقعی ربات را وارد کن
 
-// ===============
+// آدرس دامنه Render
+const WEBHOOK_DOMAIN = "https://cafeeng-bot-1.onrender.com";
+
+// مسیر وبهوک
+const WEBHOOK_PATH = "/webhook";
+
+// =======================
 //   ساخت ربات
-// ===============
+// =======================
 const bot = new Telegraf(BOT_TOKEN);
 
-// پاسخ به /start
+// پاسخ به استارت
 bot.start((ctx) => {
-  ctx.reply(
-    "سلام! ربات Cafeeng همیشه آنلاینه 👷‍♂️📚\nبرای باز کردن Mini App روی دکمه پایین بزن:",
-    {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: "🚀 باز کردن Mini App",
-              web_app: { url: `${WEBHOOK_URL}/app` },
-            },
-          ],
-        ],
-      },
-    }
-  );
+  ctx.reply("سلام! ربات Cafeeng همیشه آنلاینه 👷‍♂️📚");
 });
 
-// ===============
-//   ساخت Express
-// ===============
+// =======================
+//   ساخت سرور Express
+// =======================
 const app = express();
 
-// فایل‌های پوشه frontend مثل CSS, JS
-app.use(express.static("frontend"));
+// فعال کردن مسیر استاتیک برای Mini App
+app.use("/app", express.static("frontend"));
 
-// مسیر Mini App
-app.get("/app", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "miniapp.html"));
-});
-
-// وب‌هوک ربات
-app.use(bot.webhookCallback("/webhook"));
-
-// تنظیم وب‌هوک
-bot.telegram.setWebhook(`${WEBHOOK_URL}/webhook`);
-
-// صفحه اصلی فقط برای تست
+// صفحه اصلی سایت
 app.get("/", (req, res) => {
   res.send("Cafeeng Bot is Running! ✔️");
 });
 
-// ===============
-//   اجرای سرور
-// ===============
+// اتصال وبهوک
+app.use(bot.webhookCallback(WEBHOOK_PATH));
+
+// ست‌کردن وبهوک تلگرام
+bot.telegram.setWebhook(`${WEBHOOK_DOMAIN}${WEBHOOK_PATH}`);
+
+// اجرای سرور
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log("🚀 سرور اجرا شد روی پورت:", PORT);
-  console.log("🌐 Webhook فعال شد:", `${WEBHOOK_URL}/webhook`);
-  console.log("📱 MiniApp URL:", `${WEBHOOK_URL}/app`);
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🌐 Webhook active at: ${WEBHOOK_DOMAIN}${WEBHOOK_PATH}`);
+  console.log(`📱 MiniApp served at: ${WEBHOOK_DOMAIN}/app/`);
 });
-bot.start((ctx) => {
-  ctx.reply(
-    "سلام! یکی از گزینه‌های زیر را انتخاب کن:",
-    {
-      reply_markup: {
-        keyboard: [
-          [{ text: "🚀 باز کردن مینی‌اپ" }],
-          [{ text: "ℹ️ راهنما" }]
-        ],
-        resize_keyboard: true
-      }
-    }
-  );
-});
-bot.hears("🚀 باز کردن مینی‌اپ", (ctx) => {
-  ctx.reply("مینی‌اپ در حال باز شدن است...", {
-    reply_markup: {
-      inline_keyboard: [
-        [{ text: "Open Mini App", web_app: { url: "https://cafeeng-bot-1.onrender.com/app/" } }]
-      ]
-    }
-  });
-});
-
