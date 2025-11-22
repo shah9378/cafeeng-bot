@@ -1,71 +1,97 @@
+// =======================
+//   نیازمندی‌ها
+// =======================
 const express = require("express");
-const path = require("path");
 const { Telegraf } = require("telegraf");
 
-console.log("🔥 index.js اجرا شد");
-
 // =======================
-//   تنظیمات مهم
+//   تنظیمات ربات
 // =======================
 
-// توکن ربات
-const BOT_TOKEN = "8434442638:AAE-77hXCMlqYrZVkrzfvJHtuvaNsMB1B20"; // ⬅️ توکن واقعی را بگذار
+// ⚠️ توکن ربات تلگرام خودت را اینجا بگذار
+const BOT_TOKEN = "8434442638:AAE-77hXCMlqYrZVkrzfvJHtuvaNsMB1B20";
 
-// آدرس دامنه Render
-const WEBHOOK_URL = "https://cafeeng-bot-1.onrender.com/webhook";
+// آدرس Render
+const BASE_URL = "https://cafeeng-bot-1.onrender.com";
+
+console.log("🔥 فایل index.js اجرا شد!");
 
 // =======================
 //   ساخت ربات
 // =======================
 const bot = new Telegraf(BOT_TOKEN);
 
-// پاسخ به /start
+console.log("🤖 ربات ساخته شد");
+
+// /start
 bot.start((ctx) => {
-  ctx.reply("سلام! ربات Cafeeng همیشه آنلاینه 👷‍♂️📚\nبرای اجرای مینی‌اپ دکمه زیر را بزن:",
+  ctx.reply(
+    "سلام! به ربات Cafeeng خوش اومدی 👷‍♂️📚\n\nاز دکمه‌های زیر استفاده کن:",
     {
       reply_markup: {
         inline_keyboard: [
           [
             {
-              text: "اجرای Mini App 🚀",
-              web_app: { url: "https://cafeeng-bot-1.onrender.com/app" }
-            }
-          ]
-        ]
-      }
+              text: "🚀 اجرای Mini App",
+              web_app: { url: `${BASE_URL}/app` },
+            },
+          ],
+          [{ text: "ℹ️ درباره ربات", callback_data: "about" }],
+          [{ text: "📚 راهنما", callback_data: "help" }],
+        ],
+      },
     }
   );
 });
 
+// دکمه‌ها
+bot.action("about", (ctx) => {
+  ctx.answerCbQuery();
+  ctx.reply("ربات Cafeeng برای مینی‌اپ‌ها و اتوماسیون طراحی شده است.");
+});
+
+bot.action("help", (ctx) => {
+  ctx.answerCbQuery();
+  ctx.reply("برای شروع Mini App را باز کنید یا دستور /start را وارد کنید.");
+});
+
 // =======================
-//   Express Web Server
+//   Express Server
 // =======================
 const app = express();
+app.use(express.json());
 
-// ثبت webhook
-app.use(bot.webhookCallback("/webhook"));
+// مسیر اجرای Mini App
+app.use("/app", express.static("miniapp.html" ? __dirname : "/"));
 
-// دریافت فایل miniapp.html
-app.get("/app", (req, res) => {
-  res.sendFile(path.join(__dirname, "miniapp.html"));
-});
-
-// صفحه اصلی تست
+// صفحه Home
 app.get("/", (req, res) => {
-  res.send("Cafeeng Bot is Running!");
+  res.send("Cafeeng Bot is Running! ✔️");
 });
 
-// فعال‌سازی Webhook هنگام اجرا
-bot.telegram.setWebhook(WEBHOOK_URL);
+// =======================
+//   API مخصوص Mini App
+// =======================
+app.post("/api/action-test", (req, res) => {
+  console.log("📩 درخواست تست از Mini App دریافت شد");
+  res.send("پاسخ تست از سرور ✔️");
+});
 
-// پورت Render
+// =======================
+//   Webhook
+// =======================
+app.use(bot.webhookCallback("/webhook"));
+bot.telegram.setWebhook(`${BASE_URL}/webhook`);
+
+console.log("🌐 Webhook تنظیم شد:", `${BASE_URL}/webhook`);
+
+// =======================
+//   اجرای سرور Render
+// =======================
 const PORT = process.env.PORT || 3000;
 
-// اجرای سرور
 app.listen(PORT, () => {
   console.log(`🚀 سرور روی پورت ${PORT} اجرا شد`);
-  console.log(`🌐 Webhook فعال شد: ${WEBHOOK_URL}`);
-});
-app.post("/api/action-test", (req, res) => {
-  res.send("پاسخ تست از سرور دریافت شد ✔️");
+  console.log(`🌍 Mini App: ${BASE_URL}/app`);
+  console.log(`📩 Webhook:  ${BASE_URL}/webhook`);
 });
